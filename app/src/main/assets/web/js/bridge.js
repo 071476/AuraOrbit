@@ -11,9 +11,6 @@ const AndroidBridge = window.AndroidBridge || {
     onPurchaseRequired: (feature) => {}
 };
 
-// ============================================
-// roundRect compatible con WebViews antiguas
-// ============================================
 function roundRectBridge(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -60,6 +57,8 @@ function loadRealApps(appsData) {
         appSprites.push(sprite);
         sphereGroup.add(sprite);
     });
+
+    console.log('Loaded ' + appsData.length + ' real apps');
 }
 
 function createRealAppSprite(app, index) {
@@ -80,31 +79,31 @@ function createRealAppSprite(app, index) {
     roundRectBridge(ctx, 8, 8, 112, 112, 20);
     ctx.stroke();
 
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending
+    }));
+    sprite.scale.set(40, 40, 1);
+
     if (app.iconBase64) {
         const img = new Image();
         img.onload = () => {
             ctx.drawImage(img, 16, 16, 96, 96);
-            updateSpriteTexture(sprite, canvas);
+            const texture = new THREE.CanvasTexture(canvas);
+            if (sprite.material.map) sprite.material.map.dispose();
+            sprite.material.map = texture;
+            sprite.material.needsUpdate = true;
         };
-        img.src = app.iconBase64;
+        img.src = 'data:image/png;base64,' + app.iconBase64;
     } else {
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 48px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(app.name.charAt(0).toUpperCase(), 64, 64);
+        ctx.fillText(app.name ? app.name.charAt(0).toUpperCase() : '?', 64, 64);
+        sprite.material.map = new THREE.CanvasTexture(canvas);
     }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.SpriteMaterial({
-        map: texture,
-        transparent: true,
-        opacity: 0.9,
-        blending: THREE.AdditiveBlending
-    });
-
-    const sprite = new THREE.Sprite(material);
-    sprite.scale.set(40, 40, 1);
 
     sprite.onClick = () => {
         AndroidBridge.launchApp(app.packageName);
@@ -114,16 +113,7 @@ function createRealAppSprite(app, index) {
     return sprite;
 }
 
-function updateSpriteTexture(sprite, canvas) {
-    if (sprite.material.map) sprite.material.map.dispose();
-    const newTexture = new THREE.CanvasTexture(canvas);
-    sprite.material.map = newTexture;
-    sprite.material.needsUpdate = true;
-}
-
-// ============================================
-// Raycasting con protección contra arrastre
-// ============================================
+// Raycasting
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let clickStartPos = { x: 0, y: 0 };
@@ -154,14 +144,10 @@ function onPointerUp(event) {
 
     if (intersects.length > 0) {
         const sprite = intersects[0].object;
-        if (sprite.onClick) {
-            sprite.onClick();
-        }
+        if (sprite.onClick) sprite.onClick();
 
         sprite.scale.set(50, 50, 1);
-        setTimeout(() => {
-            sprite.scale.set(40, 40, 1);
-        }, 200);
+        setTimeout(() => sprite.scale.set(40, 40, 1), 200);
     }
 }
 
@@ -179,9 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 });
 
-window.receiveApps = function(appsJson) {
+window.receiveApps = function(base64Json) {
     try {
-        const apps = JSON.parse(appsJson);
+        const jsonStr = atob(base64Json);
+        const apps = JSON.parse(jsonStr);
         loadRealApps(apps);
     } catch (e) {
         console.error('Error parsing apps:', e);
@@ -197,12 +184,13 @@ window.receiveAppIcon = function(packageName, base64Icon) {
         canvas.width = 128;
         canvas.height = 128;
         const ctx = canvas.getContext('2d');
-
         const img = new Image();
         img.onload = () => {
             ctx.drawImage(img, 16, 16, 96, 96);
-            updateSpriteTexture(sprite, canvas);
+            if (sprite.material.map) sprite.material.map.dispose();
+            sprite.material.map = new THREE.CanvasTexture(canvas);
+            sprite.material.needsUpdate = true;
         };
-        img.src = base64Icon;
+        img.src = 'data:image/png;base64,' + base64Icon;
     }
 };

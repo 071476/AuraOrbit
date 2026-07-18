@@ -44,9 +44,7 @@ fun SphereScreen() {
                 webChromeClient = WebChromeClient()
                 webViewClient = WebViewClient()
 
-                // Guardamos referencia al WebView en el bridge
                 bridge.attachWebView(this)
-
                 addJavascriptInterface(bridge, "AndroidBridge")
 
                 loadUrl("file:///android_asset/web/index.html")
@@ -74,44 +72,39 @@ class WebAppBridge(private val context: Context) {
 
     @JavascriptInterface
     fun getInstalledApps() {
-        val pm = context.packageManager
-        val mainIntent = Intent(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-
-        val resolveInfos = pm.queryIntentActivities(mainIntent, 0)
-        val appsArray = JSONArray()
-
-        resolveInfos.take(24).forEach { resolveInfo ->
-            val appJson = JSONObject().apply {
-                put("packageName", resolveInfo.activityInfo.packageName)
-                put("name", resolveInfo.loadLabel(pm).toString())
-                put("iconBase64", getAppIconBase64(resolveInfo.activityInfo.packageName))
+        Thread {
+            val pm = context.packageManager
+            val mainIntent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
             }
-            appsArray.put(appJson)
-        }
 
-        val appsJson = appsArray.toString()
+            val resolveInfos = pm.queryIntentActivities(mainIntent, 0)
+            val appsArray = JSONArray()
 
-        // Enviamos al WebView desde el hilo UI
-        val webView = webViewRef?.get()
-        webView?.post {
-            webView.evaluateJavascript(
-                "receiveApps('${appsJson.replace("'", "\\'")}')",
-                null
-            )
-        }
+            resolveInfos.take(24).forEach { resolveInfo ->
+                val appJson = JSONObject().apply {
+                    put("packageName", resolveInfo.activityInfo.packageName)
+                    put("name", resolveInfo.loadLabel(pm).toString())
+                    put("iconBase64", getAppIconBase64(resolveInfo.activityInfo.packageName))
+                }
+                appsArray.put(appJson)
+            }
+
+            val jsonString = appsArray.toString()
+            val base64Json = Base64.encodeToString(jsonString.toByteArray(Charsets.UTF_8), Base64.NO_WRAP)
+
+            val webView = webViewRef?.get()
+            webView?.post {
+                webView.evaluateJavascript("receiveApps('$base64Json')", null)
+            }
+        }.start()
     }
 
     @JavascriptInterface
-    fun onAppLaunched(packageName: String) {
-        // Analytics o tracking (opcional)
-    }
+    fun onAppLaunched(packageName: String) {}
 
     @JavascriptInterface
-    fun onSphereTouched(angle: Float) {
-        // Feedback táctil (opcional)
-    }
+    fun onSphereTouched(angle: Float) {}
 
     private fun getAppIconBase64(packageName: String): String? {
         return try {
@@ -127,9 +120,7 @@ class WebAppBridge(private val context: Context) {
     }
 
     private fun drawableToBitmap(drawable: Drawable): Bitmap {
-        if (drawable is BitmapDrawable) {
-            return drawable.bitmap
-        }
+        if (drawable is BitmapDrawable) return drawable.bitmap
         val bitmap = Bitmap.createBitmap(
             drawable.intrinsicWidth.coerceAtLeast(1),
             drawable.intrinsicHeight.coerceAtLeast(1),
