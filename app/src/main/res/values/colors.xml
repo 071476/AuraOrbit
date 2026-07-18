@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="deep_void">#FF050510</color>
+    <color name="nebula_purple">#FF6B21A8</color>
+    <color name="aura_cyan">#FF22D3EE</color>
+    <color name="star_gold">#FFFBBF24</color>
+    <color name="plasma_pink">#FFF472B6</color>
+    <color name="comet_blue">#FF60A5FA</color>
+    <color name="void_glass">#15FFFFFF</color>
+</resources>
