@@ -10,6 +10,7 @@ let previousMousePosition = { x: 0, y: 0 };
 let targetRotation = { x: 0, y: 0 };
 let currentRotation = { x: 0, y: 0 };
 let autoRotate = true;
+let lastFrameTime = 0;
 
 const CONFIG = {
     sphereRadius: 180,
@@ -17,6 +18,8 @@ const CONFIG = {
     orbitCount: 3,
     rotationSpeed: 0.002,
     dragSensitivity: 0.005,
+    fpsIdle: 30,
+    fpsActive: 60,
     colors: {
         ring1: 0x22D3EE,
         ring2: 0x6B21A8,
@@ -193,7 +196,6 @@ function createAppSprite(app, index) {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 128, 128);
 
-    // Usamos la funcion manual en lugar de ctx.roundRect
     ctx.strokeStyle = app.color + '80';
     ctx.lineWidth = 2;
     roundRect(ctx, 8, 8, 112, 112, 20);
@@ -315,8 +317,20 @@ function updateTime() {
     document.getElementById('dateDisplay').textContent = dateStr;
 }
 
-function animate() {
+// ============================================
+// Loop optimizado: 30fps en reposo, 60fps al tocar
+// ============================================
+function animate(currentTime) {
     requestAnimationFrame(animate);
+
+    // Determinar FPS objetivo
+    const targetFPS = isDragging ? CONFIG.fpsActive : CONFIG.fpsIdle;
+    const frameInterval = 1000 / targetFPS;
+
+    // Saltar frame si no ha pasado suficiente tiempo
+    const elapsed = currentTime - lastFrameTime;
+    if (elapsed < frameInterval) return;
+    lastFrameTime = currentTime;
 
     if (autoRotate) {
         targetRotation.y += CONFIG.rotationSpeed;
