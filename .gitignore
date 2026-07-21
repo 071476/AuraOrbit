@@ -7,3 +7,4 @@ local.properties
 .DS_Store
 logo.jpg
 aura-orbit.keystore
+keystore_base64.txt
