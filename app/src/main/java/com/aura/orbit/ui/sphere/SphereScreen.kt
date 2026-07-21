@@ -15,8 +15,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -25,10 +29,14 @@ import java.lang.ref.WeakReference
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun SphereScreen() {
+
+    var bridgeRef: WebAppBridge? = null
+
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = { context ->
             val bridge = WebAppBridge(context)
+            bridgeRef = bridge
 
             WebView(context).apply {
                 settings.apply {
@@ -51,6 +59,20 @@ fun SphereScreen() {
             }
         }
     )
+
+    // Detectar cuando el usuario vuelve a la pantalla
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                bridgeRef?.reloadApps()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 }
 
 class WebAppBridge(private val context: Context) {
@@ -59,6 +81,10 @@ class WebAppBridge(private val context: Context) {
 
     fun attachWebView(webView: WebView) {
         webViewRef = WeakReference(webView)
+    }
+
+    fun reloadApps() {
+        getInstalledApps()
     }
 
     @JavascriptInterface
