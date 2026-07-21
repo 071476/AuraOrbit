@@ -64,6 +64,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.webkit:webkit:1.11.0")
 
+    // Google Play Billing
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
+
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
