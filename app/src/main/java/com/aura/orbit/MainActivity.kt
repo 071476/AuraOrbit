@@ -1,7 +1,10 @@
 package com.aura.orbit
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -30,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -102,12 +104,10 @@ fun AuraOrbitApp(billingManagerRef: (BillingManager) -> Unit) {
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF050510))) {
 
-        // Esfera (siempre presente debajo)
         if (!showSetup && (isPro || showPaywall)) {
             SphereScreen()
         }
 
-        // Pantalla de setup (primera vez)
         AnimatedVisibility(
             visible = showSetup,
             enter = fadeIn(),
@@ -123,7 +123,6 @@ fun AuraOrbitApp(billingManagerRef: (BillingManager) -> Unit) {
             )
         }
 
-        // Paywall (si no es pro)
         AnimatedVisibility(
             visible = showPaywall && !showSetup,
             enter = fadeIn(),
@@ -137,6 +136,97 @@ fun AuraOrbitApp(billingManagerRef: (BillingManager) -> Unit) {
                     showPaywall = false
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun SetupScreen(onReady: () -> Unit) {
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF050510)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(32.dp)
+        ) {
+            Text(
+                text = "AURA ORBIT",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF22D3EE),
+                letterSpacing = 6.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Tu universo de apps",
+                fontSize = 16.sp,
+                color = Color.White.copy(alpha = 0.6f),
+                letterSpacing = 2.sp
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            Text(
+                text = "Para activar AuraOrbit como tu pantalla de inicio:",
+                fontSize = 14.sp,
+                color = Color.White.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "1. Toca el botón de abajo\n2. Selecciona AuraOrbit\n3. Elige \"Siempre\"",
+                fontSize = 14.sp,
+                color = Color(0xFF22D3EE),
+                textAlign = TextAlign.Center,
+                lineHeight = 24.sp
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            Button(
+                onClick = {
+                    val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+                    context.startActivity(intent)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6B21A8)
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Configurar como inicio",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onReady,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Continuar sin configurar",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.5f)
+                )
+            }
         }
     }
 }
