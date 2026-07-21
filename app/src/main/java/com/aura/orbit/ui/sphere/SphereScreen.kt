@@ -60,7 +60,6 @@ fun SphereScreen() {
         }
     )
 
-    // Detectar cuando el usuario vuelve a la pantalla
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -107,7 +106,7 @@ class WebAppBridge(private val context: Context) {
             val resolveInfos = pm.queryIntentActivities(mainIntent, 0)
             val appsArray = JSONArray()
 
-            resolveInfos.take(24).forEach { resolveInfo ->
+            resolveInfos.take(48).forEach { resolveInfo ->
                 val appJson = JSONObject().apply {
                     put("packageName", resolveInfo.activityInfo.packageName)
                     put("name", resolveInfo.loadLabel(pm).toString())

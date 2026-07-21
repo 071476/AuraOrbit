@@ -13,8 +13,8 @@ let autoRotate = true;
 let lastFrameTime = 0;
 
 const CONFIG = {
-    sphereRadius: 180,
-    appCount: 24,
+    sphereRadius: 220,
+    appCount: 48,
     orbitCount: 3,
     rotationSpeed: 0.002,
     dragSensitivity: 0.005,
