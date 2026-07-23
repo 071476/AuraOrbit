@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -156,7 +157,7 @@ fun SetupScreen(onReady: () -> Unit) {
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "AURA ORBIT",
+                text = stringResource(R.string.setup_title),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF22D3EE),
@@ -166,7 +167,7 @@ fun SetupScreen(onReady: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Tu universo de apps",
+                text = stringResource(R.string.setup_subtitle),
                 fontSize = 16.sp,
                 color = Color.White.copy(alpha = 0.6f),
                 letterSpacing = 2.sp
@@ -175,7 +176,7 @@ fun SetupScreen(onReady: () -> Unit) {
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = "Para activar AuraOrbit como tu pantalla de inicio:",
+                text = stringResource(R.string.setup_instructions),
                 fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center
@@ -184,7 +185,7 @@ fun SetupScreen(onReady: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "1. Toca el botón de abajo\n2. Selecciona AuraOrbit\n3. Elige \"Siempre\"",
+                text = stringResource(R.string.setup_steps),
                 fontSize = 14.sp,
                 color = Color(0xFF22D3EE),
                 textAlign = TextAlign.Center,
@@ -205,7 +206,7 @@ fun SetupScreen(onReady: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Configurar como inicio",
+                    text = stringResource(R.string.setup_button),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(8.dp)
@@ -222,7 +223,7 @@ fun SetupScreen(onReady: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Continuar sin configurar",
+                    text = stringResource(R.string.setup_skip),
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.5f)
                 )
@@ -245,7 +246,7 @@ fun PaywallScreen(onPurchase: () -> Unit, onContinue: () -> Unit) {
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "AURA ORBIT PRO",
+                text = stringResource(R.string.paywall_title),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF22D3EE),
@@ -255,7 +256,7 @@ fun PaywallScreen(onPurchase: () -> Unit, onContinue: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Desbloquea tu universo de apps",
+                text = stringResource(R.string.paywall_subtitle),
                 fontSize = 16.sp,
                 color = Color.White.copy(alpha = 0.6f)
             )
@@ -263,7 +264,7 @@ fun PaywallScreen(onPurchase: () -> Unit, onContinue: () -> Unit) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "✦ Esfera 3D con tus apps reales\n✦ Hasta 48 apps orbitando\n✦ Actualización automática\n✦ Diseño único de inicio",
+                text = stringResource(R.string.paywall_features),
                 fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.8f),
                 lineHeight = 28.sp,
@@ -281,7 +282,7 @@ fun PaywallScreen(onPurchase: () -> Unit, onContinue: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Comprar por \$2.50 USD",
+                    text = stringResource(R.string.paywall_buy),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(8.dp)
@@ -298,7 +299,7 @@ fun PaywallScreen(onPurchase: () -> Unit, onContinue: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Probar gratis",
+                    text = stringResource(R.string.paywall_try),
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.5f)
                 )

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aura Orbit</string>
+    <string name="setup_title">AURA ORBIT</string>
+    <string name="setup_subtitle">Seu universo de apps</string>
+    <string name="setup_instructions">Para definir AuraOrbit como tela inicial:</string>
+    <string name="setup_steps">1. Toque no botão abaixo\n2. Selecione AuraOrbit\n3. Escolha \"Sempre\"</string>
+    <string name="setup_button">Definir como tela inicial</string>
+    <string name="setup_skip">Continuar sem definir</string>
+    <string name="paywall_title">AURA ORBIT PRO</string>
+    <string name="paywall_subtitle">Desbloqueie seu universo de apps</string>
+    <string name="paywall_features">✦ Esfera 3D com seus apps reais\n✦ Até 48 apps orbitando\n✦ Atualização automática\n✦ Design único de tela inicial</string>
+    <string name="paywall_buy">Comprar por $2.50 USD</string>
+    <string name="paywall_try">Experimentar grátis</string>
+</resources>

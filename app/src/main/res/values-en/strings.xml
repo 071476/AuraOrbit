@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aura Orbit</string>
+    <string name="setup_title">AURA ORBIT</string>
+    <string name="setup_subtitle">Your app universe</string>
+    <string name="setup_instructions">To set AuraOrbit as your home screen:</string>
+    <string name="setup_steps">1. Tap the button below\n2. Select AuraOrbit\n3. Choose \"Always\"</string>
+    <string name="setup_button">Set as Home Screen</string>
+    <string name="setup_skip">Continue without setting</string>
+    <string name="paywall_title">AURA ORBIT PRO</string>
+    <string name="paywall_subtitle">Unlock your app universe</string>
+    <string name="paywall_features">✦ 3D Sphere with your real apps\n✦ Up to 48 apps orbiting\n✦ Auto-update\n✦ Unique home screen design</string>
+    <string name="paywall_buy">Buy for $2.50 USD</string>
+    <string name="paywall_try">Try for free</string>
+</resources>
